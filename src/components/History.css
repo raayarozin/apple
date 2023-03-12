@@ -1,0 +1,117 @@
+.hisotry-wrapper {
+  display: flex;
+}
+
+.history-select-container {
+  display: flex;
+  justify-content: space-between;
+  min-width: 350px;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.history-table {
+  width: 100%;
+  border-spacing: 0;
+  border: 1px solid rgb(216, 216, 216);
+  border-bottom: 0;
+  margin-top: 17px;
+}
+
+.history-table-tr-main {
+  font-weight: 700;
+}
+
+.history-table-tr-main > td {
+  border-bottom: 1px solid rgb(216, 216, 216);
+  background-color: rgb(247, 247, 247);
+  width: 16.6666666667%;
+  padding: 10px 5px;
+}
+
+.history-table-row-td {
+  border-bottom: 1px solid rgb(216, 216, 216);
+  padding: 10px 5px;
+}
+
+.positive-value {
+  color: green !important;
+}
+
+.negative-value {
+  color: red !important;
+}
+
+.select-selected-frequency {
+  border: 1px solid rgb(216, 216, 216);
+  padding: 13px;
+}
+
+.history-calendar {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid rgb(216, 216, 216);
+  margin: 0 20px !important;
+}
+
+.history-popup-form {
+  display: block;
+  margin: auto;
+  width: 200px;
+}
+
+.history-popup-apply-btn {
+  cursor: pointer;
+  text-align: center;
+  margin: auto;
+  display: block;
+  border: 1px solid grey;
+  padding: 10px 15px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.modal {
+  width: 500px;
+  height: 500px;
+  background-color: rgb(247, 247, 247);
+  border: 1px solid gray;
+}
+.modal > .modal-header {
+  width: 100%;
+  border-bottom: 1px solid rgb(216, 216, 216);
+  font-size: 18px;
+  text-align: center;
+  padding: 5px;
+  margin-bottom: 20px;
+}
+
+.modal-label-input-container {
+  display: block;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.modal-label-input-container > label {
+  margin-bottom: 5px;
+}
+
+.modal-label-input-container > input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+}
+
+.modal > .close {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  padding: 2px 5px;
+  line-height: 20px;
+  right: -10px;
+  top: -10px;
+  font-size: 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #cfcece;
+}
