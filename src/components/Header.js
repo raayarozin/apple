@@ -34,7 +34,7 @@ const Header = () => {
             setPrice(`${data.last}$`);
             setChange(data.change);
             setPctChange(`${data.percentChange}%`);
-            setLastUpdate(formatDate(data.lastUpdate, 'str-format'));
+            setLastUpdate(formatDate(data.lastUpdate, 'str-format', true));
           } else {
             setPrice('not found');
             setChange('not found');

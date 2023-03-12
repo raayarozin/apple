@@ -65,10 +65,19 @@
   text-align: center;
   margin: auto;
   display: block;
-  border: 1px solid grey;
+  border: 1px solid #070f6c;
   padding: 10px 15px;
   width: 100%;
   border-radius: 10px;
+  background-color: #e1ddf1;
+  color: #070f6c;
+}
+
+.history-popup-apply-btn:disabled {
+  cursor: not-allowed;
+  background-color: rgb(247, 247, 247);
+  color: #a2a0aa;
+  border: 1px solid #a2a0aa;
 }
 
 .modal {

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import calendar from '../assets/calendar.png';
 import Popup from 'reactjs-popup';
 
@@ -5,6 +6,18 @@ const Calendar = (props) => {
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
+
+  const [invalidDates, setInvalidDates] = useState(true);
+
+  const validateDates = () => {
+    const start = document.querySelector('.history-chosen-start-date').value;
+    const end = document.querySelector('.history-chosen-end-date').value;
+    if (new Date(start) <= new Date(end)) {
+      setInvalidDates(false);
+    } else {
+      setInvalidDates(true);
+    }
+  };
 
   return (
     <Popup
@@ -23,6 +36,9 @@ const Calendar = (props) => {
               <label>Start date</label>
               <input
                 type='date'
+                onChange={() => {
+                  validateDates();
+                }}
                 className='history-chosen-start-date'
                 max={today.toISOString().split('T')[0]}
               ></input>
@@ -31,12 +47,16 @@ const Calendar = (props) => {
               <label>End date</label>
               <input
                 type='date'
+                onChange={() => {
+                  validateDates();
+                }}
                 className='history-chosen-end-date'
                 max={today.toISOString().split('T')[0]}
               ></input>
             </div>
             <button
               type='button'
+              disabled={invalidDates}
               className='history-popup-apply-btn'
               onClick={() => {
                 props.onClick();

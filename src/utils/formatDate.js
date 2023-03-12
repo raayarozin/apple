@@ -1,7 +1,16 @@
-export const formatDate = (date, formatType = 'US-format') => {
+export const formatDate = (
+  date,
+  formatType = 'US-format',
+  withHour = false
+) => {
   if (formatType === 'str-format') {
+    const time = new Date(date);
+    let hours = '';
+    if (withHour) {
+      hours = `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`;
+    }
     const data = String(new Date(date)).split(' ');
-    return `${data[1]} ${data[2]}, ${data[3]}`;
+    return `${data[1]} ${data[2]}, ${data[3]} ${hours}`;
   }
   return new Date(date).toLocaleString('en-US', {
     year: 'numeric',

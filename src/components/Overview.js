@@ -26,6 +26,7 @@ const Overview = () => {
   const [chosenPrecision, setChosenPrecision] = useState('Hours');
   const [displayedPrecision, setDisplayedPrecision] = useState('Weekly');
   const [xAxisDataKey, setXAxisDataKey] = useState('startDate');
+  const [datesChanged, setDatesChanged] = useState(false);
 
   const getData = async (period, precision, startTime, endTime) => {
     const fetchedData = [];
@@ -35,10 +36,8 @@ const Overview = () => {
           `https://test.fxempire.com/api/v1/en/stocks/chart/candles?Identifier=AAPL.XNAS&IdentifierType=Symbol&AdjustmentMethod=All&IncludeExtended=False&period=${period}&Precision=${precision}&StartTime=${startTime}&EndTime=${endTime}%2023:59&_fields=ChartBars.StartDate,ChartBars.High,ChartBars.Low,ChartBars.StartTime,ChartBars.Open,ChartBars.Close,ChartBars.Volume`
         )
         .then((res) => {
-          // console.log(res.data);
           if (res.data.length > 0) {
             for (const stock of Object.values(res.data)) {
-              // console.log(stock);
               fetchedData.push({
                 startDate: stock.StartDate,
                 startTime: stock.StartTime,
@@ -104,11 +103,15 @@ const Overview = () => {
     }
     setChosenPeriod(e.target.dataset.period);
     setChosenPrecision(e.target.dataset.precision);
-    setStartTime(e.target.dataset.start);
-    setEndTime(e.target.dataset.end);
+
+    if (!datesChanged) {
+      setStartTime(e.target.dataset.start);
+      setEndTime(e.target.dataset.end);
+    }
   };
 
   const setNewDates = () => {
+    setDatesChanged(true);
     setStartTime(
       formatDate(
         new Date(document.querySelector('.history-chosen-start-date').value)
