@@ -12,8 +12,7 @@ const Calendar = (props) => {
 
   const validateDates = () => {
     const start = document.querySelector('.chosen-start-date').value;
-    const end = document.querySelector('.chosen-end-date').value;
-    if (new Date(start) <= new Date(end)) {
+    if (new Date(start) !== '') {
       setInvalidDates(false);
     } else {
       setInvalidDates(true);
@@ -31,27 +30,15 @@ const Calendar = (props) => {
           <button className='close' onClick={close}>
             &times;
           </button>
-          <div className='modal-header'> Choose Dates </div>
+          <div className='modal-header'>Choose Start Date</div>
           <form className='popup-form'>
             <div className='modal-label-input-container'>
-              <label>Start date</label>
               <input
                 type='date'
                 onChange={() => {
                   validateDates();
                 }}
                 className='chosen-start-date'
-                max={today.toISOString().split('T')[0]}
-              ></input>
-            </div>
-            <div className='modal-label-input-container'>
-              <label>End date</label>
-              <input
-                type='date'
-                onChange={() => {
-                  validateDates();
-                }}
-                className='chosen-end-date'
                 max={today.toISOString().split('T')[0]}
               ></input>
             </div>

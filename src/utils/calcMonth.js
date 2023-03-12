@@ -1,6 +1,8 @@
-export const calc1MonthAgo = (date) => {
+export const calc1Month = (date, direction = 'before') => {
   var d = date.getDate();
-  date.setMonth(date.getMonth() - 1);
+  direction === 'before'
+    ? date.setMonth(date.getMonth() - 1)
+    : date.setMonth(date.getMonth() + 1);
   if (date.getDate() !== d) {
     date.setDate(0);
   }

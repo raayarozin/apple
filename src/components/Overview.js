@@ -1,6 +1,6 @@
 import './Overview.css';
 import { formatDate } from '../utils/formatDate';
-import { calc1MonthAgo } from '../utils/calcMonth';
+import { calc1Month } from '../utils/calcMonth';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
@@ -14,19 +14,19 @@ import {
 import Calendar from './Calendar';
 
 const Overview = () => {
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const oneMonthAgo = formatDate(calc1MonthAgo(new Date(today)));
+  const TODAY = new Date();
+  const YESTERDAY = new Date(TODAY);
+  YESTERDAY.setDate(YESTERDAY.getDate() - 1);
+  const ONE_MONTH_AGO = formatDate(calc1Month(new Date(TODAY)));
+  const WEEK = 168;
 
-  const [overviewChart, setOverviewChart] = useState('');
-  const [startTime, setStartTime] = useState(oneMonthAgo);
-  const [endTime, setEndTime] = useState(formatDate(today));
-  const [chosenPeriod, setChosenPeriod] = useState(168);
-  const [chosenPrecision, setChosenPrecision] = useState('Hours');
+  const [displayedData, setDisplayedData] = useState('');
+  const [start, setStart] = useState(ONE_MONTH_AGO);
+  const [end, setEnd] = useState(formatDate(TODAY));
+  const [period, setPeriod] = useState(WEEK);
+  const [precision, setPrecision] = useState('Hours');
   const [displayedPrecision, setDisplayedPrecision] = useState('Weekly');
   const [xAxisDataKey, setXAxisDataKey] = useState('startDate');
-  const [datesChanged, setDatesChanged] = useState(false);
 
   const getData = async (period, precision, startTime, endTime) => {
     const fetchedData = [];
@@ -45,7 +45,7 @@ const Overview = () => {
               });
             }
 
-            setOverviewChart(
+            setDisplayedData(
               <AreaChart
                 width={1250}
                 height={400}
@@ -72,7 +72,7 @@ const Overview = () => {
               </AreaChart>
             );
           } else {
-            setOverviewChart(
+            setDisplayedData(
               <div className='no-data-found-msg'>
                 No data was found for these dates
               </div>
@@ -87,46 +87,43 @@ const Overview = () => {
     }
   };
 
-  const handlePeriodPrecision = (e) => {
-    if (e.target.dataset.precision === 'Minutes') {
+  const getDataByFrequency = (e) => {
+    const { precision, period } = e.target.dataset;
+
+    if (precision === 'Minutes') {
       setXAxisDataKey('startTime');
       setDisplayedPrecision('by Minutes');
-    } else if (
-      +e.target.dataset.period === 1 &&
-      e.target.dataset.precision === 'Hours'
-    ) {
+      setEnd(start);
+    } else if (+period === 1 && precision === 'Hours') {
       setXAxisDataKey('startTime');
       setDisplayedPrecision('Hourly');
-    } else {
+      setEnd(start);
+    } else if (+period === WEEK) {
       setXAxisDataKey('startDate');
       setDisplayedPrecision('Weekly');
+      setEnd(formatDate(calc1Month(new Date(start), 'after')));
     }
-    setChosenPeriod(e.target.dataset.period);
-    setChosenPrecision(e.target.dataset.precision);
 
-    if (!datesChanged) {
-      setStartTime(e.target.dataset.start);
-      setEndTime(e.target.dataset.end);
-    }
+    setPeriod(period);
+    setPrecision(precision);
   };
 
-  const setNewDates = () => {
-    setDatesChanged(true);
-    setStartTime(
-      formatDate(
-        new Date(document.querySelector('.history-chosen-start-date').value)
-      )
+  const setNewStart = () => {
+    const newDate = formatDate(
+      new Date(document.querySelector('.chosen-start-date').value)
     );
-    setEndTime(
-      formatDate(
-        new Date(document.querySelector('.history-chosen-end-date').value)
-      )
-    );
+    setStart(newDate);
+
+    if (+period !== WEEK) {
+      setEnd(newDate);
+    } else {
+      setEnd(formatDate(calc1Month(new Date(newDate), 'after')));
+    }
   };
 
   useEffect(() => {
-    getData(chosenPeriod, chosenPrecision, startTime, endTime);
-  }, [chosenPeriod, chosenPrecision, startTime, endTime]);
+    getData(period, precision, start, end);
+  }, [period, precision, start, end]);
 
   return (
     <div>
@@ -134,10 +131,8 @@ const Overview = () => {
         <button
           data-period='1'
           data-precision='Minutes'
-          data-start={formatDate(yesterday)}
-          data-end={formatDate(today)}
           onClick={(e) => {
-            handlePeriodPrecision(e);
+            getDataByFrequency(e);
           }}
         >
           1M
@@ -145,10 +140,8 @@ const Overview = () => {
         <button
           data-period='5'
           data-precision='Minutes'
-          data-start={formatDate(yesterday)}
-          data-end={formatDate(today)}
           onClick={(e) => {
-            handlePeriodPrecision(e);
+            getDataByFrequency(e);
           }}
         >
           5M
@@ -156,32 +149,28 @@ const Overview = () => {
         <button
           data-period='1'
           data-precision='Hours'
-          data-start={formatDate(yesterday)}
-          data-end={formatDate(today)}
           onClick={(e) => {
-            handlePeriodPrecision(e);
+            getDataByFrequency(e);
           }}
         >
           1H
         </button>
         <button
-          data-period='168'
+          data-period={WEEK}
           data-precision='Hours'
-          data-start={oneMonthAgo}
-          data-end={formatDate(today)}
           onClick={(e) => {
-            handlePeriodPrecision(e);
+            getDataByFrequency(e);
           }}
         >
           1W
         </button>
-        <Calendar onClick={setNewDates} />
+        <Calendar onClick={setNewStart} />
       </div>
       <div>
-        From {formatDate(startTime, 'str-format')} to{' '}
-        {formatDate(endTime, 'str-format')} ({displayedPrecision})
+        From {formatDate(start, 'str-format')} to{' '}
+        {formatDate(end, 'str-format')} ({displayedPrecision})
       </div>
-      <div>{overviewChart}</div>
+      <div>{displayedData}</div>
     </div>
   );
 };
