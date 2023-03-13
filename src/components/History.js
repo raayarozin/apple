@@ -15,6 +15,7 @@ const History = () => {
   const [empty, setEmpty] = useState(false);
   const [period, setPeriod] = useState(WEEK);
   const [precision, setPrecision] = useState('Hours');
+  const [displayedPrecision, setDisplayedPrecision] = useState('Weekly');
   const [start, setStart] = useState(formatDate(calc1Month(new Date(TODAY))));
   const [end, setEnd] = useState(formatDate(TODAY));
 
@@ -72,38 +73,31 @@ const History = () => {
     }
   };
 
-  const getDataByFrequency = () => {
-    const frequency = document.getElementById(
-      'select-selected-frequency'
-    ).value;
-
-    if (frequency !== 'Frequency') {
-      const [period, precision] = document
-        .getElementById('select-selected-frequency')
-        .value.split(' ');
-
-      if (precision === 'Minutes' || +period === 1) {
-        setEnd(start);
-      } else {
-        setEnd(formatDate(calc1Month(new Date(start), 'after')));
-      }
-      setPeriod(period);
-      setPrecision(precision);
+  const getDataByFrequency = (e) => {
+    const { precision, period } = e.target.dataset;
+    if (precision === 'Minutes') {
+      setDisplayedPrecision('by Minutes');
+      setEnd(start);
+    } else if (+period === 1 && precision === 'Hours') {
+      setDisplayedPrecision('Hourly');
+      setEnd(start);
+    } else if (+period === WEEK) {
+      setDisplayedPrecision('Weekly');
+      setEnd(formatDate(calc1Month(new Date(start), 'after')));
     }
+
+    setPeriod(period);
+    setPrecision(precision);
   };
 
-  const setNewDates = () => {
-    const frequency = document.getElementById(
-      'select-selected-frequency'
-    ).value;
-    const newDate = new Date(
-      document.querySelector('.chosen-start-date').value
+  const setNewStart = () => {
+    const newDate = formatDate(
+      new Date(document.querySelector('.chosen-start-date').value)
     );
+    setStart(newDate);
 
-    setStart(formatDate(newDate));
-
-    if (frequency !== `${WEEK} Hours`) {
-      setEnd(formatDate(newDate));
+    if (+period !== WEEK) {
+      setEnd(newDate);
     } else {
       setEnd(formatDate(calc1Month(new Date(newDate), 'after')));
     }
@@ -115,27 +109,48 @@ const History = () => {
 
   return (
     <div>
-      <div className='hisotry-wrapper'>
-        <div className='history-select-container'>
-          <select
-            className='select-selected-frequency'
-            id='select-selected-frequency'
-            onChange={() => {
-              getDataByFrequency();
-            }}
-          >
-            <option>Frequency</option>
-            <option value='1 Minutes'>1 Minute</option>
-            <option value='5 Minutes'>5 Minutes</option>
-            <option value='1 Hours'>1 Hour</option>
-            <option value={`${WEEK} Hours`}>1 Week</option>
-          </select>
-          <Calendar onClick={setNewDates} />
-          <div>
-            From {formatDate(start, 'str-format')} to{' '}
-            {formatDate(end, 'str-format')}
-          </div>
-        </div>
+      <div className='overview-time-btns-container'>
+        <button
+          data-period='1'
+          data-precision='Minutes'
+          onClick={(e) => {
+            getDataByFrequency(e);
+          }}
+        >
+          1 minute
+        </button>
+        <button
+          data-period='5'
+          data-precision='Minutes'
+          onClick={(e) => {
+            getDataByFrequency(e);
+          }}
+        >
+          5 minutes
+        </button>
+        <button
+          data-period='1'
+          data-precision='Hours'
+          onClick={(e) => {
+            getDataByFrequency(e);
+          }}
+        >
+          1 hour
+        </button>
+        <button
+          data-period={WEEK}
+          data-precision='Hours'
+          onClick={(e) => {
+            getDataByFrequency(e);
+          }}
+        >
+          1 week
+        </button>
+        <Calendar onClick={setNewStart} />
+      </div>
+      <div>
+        From {formatDate(start, 'str-format')} to{' '}
+        {formatDate(end, 'str-format')}({displayedPrecision})
       </div>
 
       {empty ? (
