@@ -59,7 +59,7 @@ const Overview = () => {
                   </linearGradient>
                 </defs>
                 <XAxis dataKey={xAxisDataKey} />
-                <YAxis domain={['auto', 'auto']} />
+                <YAxis domain={['auto', 'auto']} allowDecimals={false} />
                 <CartesianGrid strokeDasharray='3 3' />
                 <Tooltip />
                 <Area
