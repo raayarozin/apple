@@ -7,7 +7,10 @@ export const formatDate = (
     const time = new Date(date);
     let hours = '';
     if (withHour) {
-      hours = `${time.getHours()}:${time.getMinutes()} UTC`;
+      let minutes = time.getMinutes();
+      minutes = ('0' + minutes).slice(-2);
+
+      hours = `${time.getHours()}:${minutes} UTC`;
     }
     const data = String(new Date(date)).split(' ');
     return `${data[1]} ${data[2]}, ${data[3]} ${hours}`;

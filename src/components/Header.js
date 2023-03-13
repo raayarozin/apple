@@ -64,23 +64,25 @@ const Header = () => {
   }, []);
 
   return (
-    <div className='header'>
-      <div className='apple-inc-header'>
-        Apple Inc
-        <div className='header-date'>{lastUpdate}</div>
-      </div>
-      <div>
+    <div className='header-wrapper'>
+      <div className='header'>
+        <div className='apple-inc-header'>
+          Apple Inc
+          <div className='header-date'>{lastUpdate}</div>
+        </div>
         <div>
-          <div className='header-price'>
-            <img className='hedaer-icon' src={icon} alt=''></img>
-            {price}
-          </div>
-          <div className='header-pct-change-container'>
-            <div className={change < 0 ? 'negative-value' : 'positive-value'}>
-              {change}
+          <div>
+            <div className='header-price'>
+              <img className='hedaer-icon' src={icon} alt=''></img>
+              {price}
             </div>
-            <div className={change < 0 ? 'negative-value' : 'positive-value'}>
-              {pctChange}
+            <div className='header-pct-change-container'>
+              <div className={change < 0 ? 'negative-value' : 'positive-value'}>
+                {change}
+              </div>
+              <div className={change < 0 ? 'negative-value' : 'positive-value'}>
+                {pctChange}
+              </div>
             </div>
           </div>
         </div>
