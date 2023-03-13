@@ -48,7 +48,7 @@ const Overview = () => {
             setDisplayedData(
               <AreaChart
                 width={1250}
-                height={400}
+                height={350}
                 data={fetchedData}
                 margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
               >
@@ -135,7 +135,7 @@ const Overview = () => {
             getDataByFrequency(e);
           }}
         >
-          1M
+          1 minute
         </button>
         <button
           data-period='5'
@@ -144,7 +144,7 @@ const Overview = () => {
             getDataByFrequency(e);
           }}
         >
-          5M
+          5 minutes
         </button>
         <button
           data-period='1'
@@ -153,7 +153,7 @@ const Overview = () => {
             getDataByFrequency(e);
           }}
         >
-          1H
+          1 hour
         </button>
         <button
           data-period={WEEK}
@@ -162,7 +162,7 @@ const Overview = () => {
             getDataByFrequency(e);
           }}
         >
-          1W
+          1 week
         </button>
         <Calendar onClick={setNewStart} />
       </div>
