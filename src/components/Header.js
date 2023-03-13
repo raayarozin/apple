@@ -33,8 +33,10 @@ const Header = () => {
           if (data.last) {
             setPrice(data.last);
             setChange(data.change);
-            setPctChange(`${data.percentChange}%`);
-            setLastUpdate(formatDate(data.lastUpdate, 'str-format', true));
+            setPctChange(`(${data.percentChange}%)`);
+            setLastUpdate(
+              `As of ${formatDate(data.lastUpdate, 'str-format', true)}`
+            );
           } else {
             setPrice('not found');
             setChange('not found');
@@ -53,7 +55,7 @@ const Header = () => {
     <div className='header'>
       <div className='apple-inc-header'>
         Apple Inc
-        <div className='header-date'>As of {lastUpdate}</div>
+        <div className='header-date'>{lastUpdate}</div>
       </div>
       <div>
         <div>
@@ -63,7 +65,7 @@ const Header = () => {
               {change}
             </div>
             <div className={change < 0 ? 'negative-value' : 'positive-value'}>
-              ({pctChange})
+              {pctChange}
             </div>
           </div>
         </div>
