@@ -31,7 +31,7 @@ const Header = () => {
         if ((json.event = 'data')) {
           const data = json['s-aapl'];
           if (data.last) {
-            setPrice(`${data.last}$`);
+            setPrice(data.last);
             setChange(data.change);
             setPctChange(`${data.percentChange}%`);
             setLastUpdate(formatDate(data.lastUpdate, 'str-format', true));
@@ -51,56 +51,22 @@ const Header = () => {
 
   return (
     <div className='header'>
-      <div
-        className='header-detail'
-        onMouseEnter={(e) => {
-          e.target.classList.add('header-detail-hover');
-        }}
-        onMouseLeave={(e) => {
-          e.target.classList.remove('header-detail-hover');
-        }}
-      >
-        Price: <span className='header-detail-bold'>{price}</span>
+      <div className='apple-inc-header'>
+        Apple Inc
+        <div className='header-date'>As of {lastUpdate}</div>
       </div>
-      <div
-        className='header-detail'
-        onMouseEnter={(e) => {
-          e.target.classList.add('header-detail-hover');
-        }}
-        onMouseLeave={(e) => {
-          e.target.classList.remove('header-detail-hover');
-        }}
-      >
-        Change:<span className='header-detail-bold'> {change}</span>
-      </div>
-      <div
-        className='header-detail'
-        onMouseEnter={(e) => {
-          e.target.classList.add('header-detail-hover');
-        }}
-        onMouseLeave={(e) => {
-          e.target.classList.remove('header-detail-hover');
-        }}
-      >
-        Percent Change:{' '}
-        <span
-          className={`header-detail-bold ${
-            pctChange > 0 ? 'positive-value' : 'negative-value'
-          }`}
-        >
-          {pctChange}
-        </span>
-      </div>
-      <div
-        className='header-detail'
-        onMouseEnter={(e) => {
-          e.target.classList.add('header-detail-hover');
-        }}
-        onMouseLeave={(e) => {
-          e.target.classList.remove('header-detail-hover');
-        }}
-      >
-        Last Update:<span className='header-detail-bold'> {lastUpdate}</span>
+      <div>
+        <div>
+          <div className='header-price'>{price}</div>
+          <div className='header-pct-change-container'>
+            <div className={change < 0 ? 'negative-value' : 'positive-value'}>
+              {change}
+            </div>
+            <div className={change < 0 ? 'negative-value' : 'positive-value'}>
+              ({pctChange})
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
