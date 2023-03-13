@@ -11,7 +11,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from 'recharts';
-import Calendar from './Calendar';
+import FrequencyButtons from './FrequencyButtons';
 
 const Overview = () => {
   const TODAY = new Date();
@@ -127,45 +127,13 @@ const Overview = () => {
 
   return (
     <div>
-      <div className='overview-time-btns-container'>
-        <button
-          data-period='1'
-          data-precision='Minutes'
-          onClick={(e) => {
-            getDataByFrequency(e);
-          }}
-        >
-          1 minute
-        </button>
-        <button
-          data-period='5'
-          data-precision='Minutes'
-          onClick={(e) => {
-            getDataByFrequency(e);
-          }}
-        >
-          5 minutes
-        </button>
-        <button
-          data-period='1'
-          data-precision='Hours'
-          onClick={(e) => {
-            getDataByFrequency(e);
-          }}
-        >
-          1 hour
-        </button>
-        <button
-          data-period={WEEK}
-          data-precision='Hours'
-          onClick={(e) => {
-            getDataByFrequency(e);
-          }}
-        >
-          1 week
-        </button>
-        <Calendar onClick={setNewStart} />
-      </div>
+      <FrequencyButtons
+        onClick={(e) => {
+          getDataByFrequency(e);
+        }}
+        calendar={setNewStart}
+      />
+
       <div>
         From {formatDate(start, 'str-format')} to{' '}
         {formatDate(end, 'str-format')} ({displayedPrecision})
