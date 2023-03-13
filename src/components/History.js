@@ -2,22 +2,22 @@ import './History.css';
 import { useEffect, useState } from 'react';
 import { calc1Month } from '../utils/calcMonth';
 import { formatDate } from '../utils/formatDate';
+import { getNewStartEnd } from '../utils/getNewStartEnd';
+import { getDataByFrequency } from '../utils/getDataByFrequency';
+
 import axios from 'axios';
 import FrequencyButtons from './FrequencyButtons';
 
-const History = () => {
-  const TODAY = new Date();
-  const YESTERDAY = new Date(TODAY);
-  YESTERDAY.setDate(YESTERDAY.getDate() - 1);
-  const WEEK = 168;
-
+const History = (props) => {
   const [historyData, setHistoryData] = useState('');
   const [empty, setEmpty] = useState(false);
-  const [period, setPeriod] = useState(WEEK);
+  const [period, setPeriod] = useState(props.week);
   const [precision, setPrecision] = useState('Hours');
   const [displayedPrecision, setDisplayedPrecision] = useState('Weekly');
-  const [start, setStart] = useState(formatDate(calc1Month(new Date(TODAY))));
-  const [end, setEnd] = useState(formatDate(TODAY));
+  const [start, setStart] = useState(
+    formatDate(calc1Month(new Date(props.today)))
+  );
+  const [end, setEnd] = useState(formatDate(props.today));
 
   const getData = async (period, precision, start, end) => {
     const fetchedData = [];
@@ -73,34 +73,20 @@ const History = () => {
     }
   };
 
-  const getDataByFrequency = (e) => {
-    const { precision, period } = e.target.dataset;
-    if (precision === 'Minutes') {
-      setDisplayedPrecision('by Minutes');
-      setEnd(start);
-    } else if (+period === 1 && precision === 'Hours') {
-      setDisplayedPrecision('Hourly');
-      setEnd(start);
-    } else if (+period === WEEK) {
-      setDisplayedPrecision('Weekly');
-      setEnd(formatDate(calc1Month(new Date(start), 'after')));
-    }
+  const setDataByFrequency = (e) => {
+    const [newDisplayedPrecision, newEnd, newPeriod, newPrecision] =
+      getDataByFrequency(e, start, 'History');
 
-    setPeriod(period);
-    setPrecision(precision);
+    setDisplayedPrecision(newDisplayedPrecision);
+    setEnd(newEnd);
+    setPeriod(newPeriod);
+    setPrecision(newPrecision);
   };
 
-  const setNewStart = () => {
-    const newDate = formatDate(
-      new Date(document.querySelector('.chosen-start-date').value)
-    );
-    setStart(newDate);
-
-    if (+period !== WEEK) {
-      setEnd(newDate);
-    } else {
-      setEnd(formatDate(calc1Month(new Date(newDate), 'after')));
-    }
+  const setNewStartEnd = () => {
+    const [newStart, newEnd] = getNewStartEnd(period);
+    setStart(newStart);
+    setEnd(newEnd);
   };
 
   useEffect(() => {
@@ -111,9 +97,9 @@ const History = () => {
     <div>
       <FrequencyButtons
         onClick={(e) => {
-          getDataByFrequency(e);
+          setDataByFrequency(e);
         }}
-        calendar={setNewStart}
+        calendar={setNewStartEnd}
       />
       <div>
         From {formatDate(start, 'str-format')} to{' '}

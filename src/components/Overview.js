@@ -1,6 +1,8 @@
 import './Overview.css';
 import { formatDate } from '../utils/formatDate';
-import { calc1Month } from '../utils/calcMonth';
+import { getNewStartEnd } from '../utils/getNewStartEnd';
+import { getDataByFrequency } from '../utils/getDataByFrequency';
+import FrequencyButtons from './FrequencyButtons';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
@@ -11,19 +13,12 @@ import {
   CartesianGrid,
   Tooltip,
 } from 'recharts';
-import FrequencyButtons from './FrequencyButtons';
 
-const Overview = () => {
-  const TODAY = new Date();
-  const YESTERDAY = new Date(TODAY);
-  YESTERDAY.setDate(YESTERDAY.getDate() - 1);
-  const ONE_MONTH_AGO = formatDate(calc1Month(new Date(TODAY)));
-  const WEEK = 168;
-
+const Overview = (props) => {
   const [displayedData, setDisplayedData] = useState('');
-  const [start, setStart] = useState(ONE_MONTH_AGO);
-  const [end, setEnd] = useState(formatDate(TODAY));
-  const [period, setPeriod] = useState(WEEK);
+  const [start, setStart] = useState(props.oneMonthAgo);
+  const [end, setEnd] = useState(formatDate(props.today));
+  const [period, setPeriod] = useState(props.week);
   const [precision, setPrecision] = useState('Hours');
   const [displayedPrecision, setDisplayedPrecision] = useState('Weekly');
   const [xAxisDataKey, setXAxisDataKey] = useState('startDate');
@@ -87,38 +82,26 @@ const Overview = () => {
     }
   };
 
-  const getDataByFrequency = (e) => {
-    const { precision, period } = e.target.dataset;
+  const setDataByFrequency = (e) => {
+    const [
+      newXAxisDataKey,
+      newDisplayedPrecision,
+      newEnd,
+      newPeriod,
+      newPrecision,
+    ] = getDataByFrequency(e, start, 'Overview');
 
-    if (precision === 'Minutes') {
-      setXAxisDataKey('startTime');
-      setDisplayedPrecision('by Minutes');
-      setEnd(start);
-    } else if (+period === 1 && precision === 'Hours') {
-      setXAxisDataKey('startTime');
-      setDisplayedPrecision('Hourly');
-      setEnd(start);
-    } else if (+period === WEEK) {
-      setXAxisDataKey('startDate');
-      setDisplayedPrecision('Weekly');
-      setEnd(formatDate(calc1Month(new Date(start), 'after')));
-    }
-
-    setPeriod(period);
-    setPrecision(precision);
+    setXAxisDataKey(newXAxisDataKey);
+    setDisplayedPrecision(newDisplayedPrecision);
+    setEnd(newEnd);
+    setPeriod(newPeriod);
+    setPrecision(newPrecision);
   };
 
-  const setNewStart = () => {
-    const newDate = formatDate(
-      new Date(document.querySelector('.chosen-start-date').value)
-    );
-    setStart(newDate);
-
-    if (+period !== WEEK) {
-      setEnd(newDate);
-    } else {
-      setEnd(formatDate(calc1Month(new Date(newDate), 'after')));
-    }
+  const setNewStartEnd = () => {
+    const [newStart, newEnd] = getNewStartEnd(period);
+    setStart(newStart);
+    setEnd(newEnd);
   };
 
   useEffect(() => {
@@ -129,9 +112,9 @@ const Overview = () => {
     <div>
       <FrequencyButtons
         onClick={(e) => {
-          getDataByFrequency(e);
+          setDataByFrequency(e);
         }}
-        calendar={setNewStart}
+        calendar={setNewStartEnd}
       />
 
       <div>
