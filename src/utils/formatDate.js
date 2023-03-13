@@ -7,7 +7,7 @@ export const formatDate = (
     const time = new Date(date);
     let hours = '';
     if (withHour) {
-      hours = `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`;
+      hours = `${time.getHours()}:${time.getMinutes()}`;
     }
     const data = String(new Date(date)).split(' ');
     return `${data[1]} ${data[2]}, ${data[3]} ${hours}`;

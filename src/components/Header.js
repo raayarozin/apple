@@ -2,10 +2,15 @@ import './Header.css';
 import { useState, useEffect } from 'react';
 import { formatDate } from '../utils/formatDate';
 import ClipLoader from 'react-spinners/ClipLoader';
+import positiveValue from '../assets/positive-value.png';
+import negativeValue from '../assets/negative-value.png';
 
-const ws = new WebSocket('wss://wstest.fxempire.com?token=btctothemoon');
-const apiCall = JSON.stringify({ type: 'SUBSCRIBE', instruments: ['s-aapl'] });
 const Header = () => {
+  const ws = new WebSocket('wss://wstest.fxempire.com?token=btctothemoon');
+  const apiCall = JSON.stringify({
+    type: 'SUBSCRIBE',
+    instruments: ['s-aapl'],
+  });
   const clipLoader = (
     <ClipLoader
       loading={true}
@@ -16,9 +21,10 @@ const Header = () => {
     />
   );
   const [price, setPrice] = useState(clipLoader);
-  const [change, setChange] = useState(clipLoader);
-  const [pctChange, setPctChange] = useState(clipLoader);
-  const [lastUpdate, setLastUpdate] = useState(clipLoader);
+  const [change, setChange] = useState('');
+  const [pctChange, setPctChange] = useState('');
+  const [lastUpdate, setLastUpdate] = useState('');
+  const [icon, setIcon] = useState('');
 
   useEffect(() => {
     ws.onopen = () => {
@@ -37,6 +43,12 @@ const Header = () => {
             setLastUpdate(
               `As of ${formatDate(data.lastUpdate, 'str-format', true)}`
             );
+
+            if (data.change > 0) {
+              setIcon(positiveValue);
+            } else {
+              setIcon(negativeValue);
+            }
           } else {
             setPrice('not found');
             setChange('not found');
@@ -59,7 +71,10 @@ const Header = () => {
       </div>
       <div>
         <div>
-          <div className='header-price'>{price}</div>
+          <div className='header-price'>
+            <img className='hedaer-icon' src={icon} alt=''></img>
+            {price}
+          </div>
           <div className='header-pct-change-container'>
             <div className={change < 0 ? 'negative-value' : 'positive-value'}>
               {change}

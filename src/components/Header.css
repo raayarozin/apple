@@ -33,6 +33,11 @@
   width: 150px;
 }
 
+.hedaer-icon {
+  width: 15px;
+  margin-right: 5px;
+}
+
 .header-pct-change-container {
   display: flex;
   justify-content: space-between;
